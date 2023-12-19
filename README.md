@@ -1,0 +1,1 @@
+# BLOG VERSI 1 BY FF
