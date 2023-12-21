@@ -21,11 +21,10 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(()=>{
+  // News CRUD
   Route.get('/news/create', 'ArticlesController.create').as('news.create');
   Route.post('/news', 'ArticlesController.store').as('news.store');
-  
   Route.get('/news/:slug', 'ArticlesController.show').as('news.show');
-  
   Route.get('/news/:slug/edit', 'ArticlesController.edit').as('news.edit');
   Route.patch('/news/:slug', 'ArticlesController.update')
   // .where('id', /^[0-9]+$/);
@@ -34,8 +33,15 @@ Route.group(()=>{
   //   cast: (id) => Number(id),
   // })
   .as('news.update');
-  
   Route.delete('/news/:slug', 'ArticlesController.destroy').as('news.destroy');
+
+  // TAG CRUD
+  Route.get('/tag', 'TagsController.index').as('tag.index');
+  Route.get('/tag/create', 'TagsController.create').as('tag.create');
+  Route.post('/tag', 'TagsController.store').as('tag.store');
+  Route.get('/tag/:slug/edit', 'TagsController.edit').as('tag.edit');
+  Route.patch('/tag/:slug', 'TagsController.update').as('tag.update');
+  Route.delete('/tag/:slug', 'TagsController.destroy').as('tag.destroy');
   
   Route.post("/logout", async ({ auth, response }) => {
     await auth.use("web").logout();

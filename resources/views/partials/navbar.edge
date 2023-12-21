@@ -25,6 +25,11 @@
         Create
       </a>
       @end
+      @if(auth.isLoggedIn)
+      <a href="{{route('tag.index')}}" class="navbar-brand d-flex align-items-center">
+        Tag Manage
+      </a>
+      @end
     </div>
   </div>
 </header>

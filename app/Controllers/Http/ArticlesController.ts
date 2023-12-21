@@ -3,6 +3,7 @@
 import Application from "@ioc:Adonis/Core/Application";
 // import Database from "@ioc:Adonis/Lucid/Database";
 import Article from "App/Models/Article";
+import Tag from "App/Models/Tag";
 import CreateArticleValidator from "App/Validators/CreateArticleValidator";
 
 export default class ArticlesController
@@ -14,8 +15,10 @@ export default class ArticlesController
     });
   }
 
-  public create({view}) {
-    return view.render('news/create')
+  public async create({view}) {
+    return view.render('news/create', {
+      tags: await Tag.all(),
+    })
   }
 
   public async store({request, response}) {
@@ -28,10 +31,13 @@ export default class ArticlesController
     //   slug: payload.title.replace(' ', '-') + new Date()
     // });
 
-    await payload.image.move(Application.publicPath("images"));
-    payload.image = payload.image.fileName;
+    if(payload.image){
+      await payload.image.move(Application.publicPath("images"));
+      payload.image = payload.image.fileName;
+    }
 
-    await Article.create(payload);
+    const article = await Article.create(payload);
+    article.related('tags').sync(payload.tags)
 
     return response.redirect().back();
   }
@@ -42,18 +48,26 @@ export default class ArticlesController
   }
 
   public async edit({view,params}) {
-    const article = await Article.findByOrFail('slug', params.slug);
-    return view.render('news/edit', { article })
+    const article = await Article.query().preload('tags').where('slug', params.slug).firstOrFail();
+    return view.render('news/edit', {
+      article,
+      tags: await Tag.all(),
+    })
   }
 
   public async update({request, response, params}) {
     
     const payload = await request.validate(CreateArticleValidator);
 
-    await payload.image.move(Application.publicPath("images"));
-    payload.image = payload.image.fileName;
-    await Article.query().where("slug", params.slug).update(payload);
-    // await Database.from('articles').where('slug', params.slug).update({...payload,});
+    const article = await Article.findByOrFail('slug', params.slug);
+    article.title = payload.title
+    article.content = payload.content
+    if(payload.image){
+      await payload.image.move(Application.publicPath("images"));
+      article.image = payload.image.fileName
+    }
+    article.related('tags').sync(payload.tags)
+    article.save()
 
     return response.redirect().back();
   }

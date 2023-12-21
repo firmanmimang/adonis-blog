@@ -1,7 +1,7 @@
 import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class CreateArticleValidator {
+export default class TagUpdateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,15 +24,14 @@ export default class CreateArticleValidator {
    *    ```
    */
   public schema = schema.create({
-    title: schema.string(),
-    content: schema.string(),
-    image: schema.file.optional({
-      size: "2mb",
-      extnames: ["jpg", "jpeg", "png", "gif", "webp"],
-    }),
-    tags: schema.array().members(schema.number([
-      rules.exists({ table: 'tags', column: 'id' })
-    ]))
+    name: schema.string([
+      rules.minLength(3),
+      rules.unique({
+        table: 'tags',
+        column: 'name',
+        whereNot: { slug: this.ctx.request.param('slug') },
+      })
+    ]),
   })
 
   /**

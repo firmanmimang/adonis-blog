@@ -7,7 +7,7 @@
         {{ csrfField() }}
         <div class="mb-3">
             <label for="title" class="form-label">Article Title</label>
-            <input type="text" class="form-control" id="title" name="title" placeholder="Article Title">
+            <input type="text" class="form-control" id="title" name="title" placeholder="Article Title" value="{{flashMessages.get('title') || ''}}">
         </div>
         @if(flashMessages.has('errors.title'))
         <p class="alert alert-danger"> {{ flashMessages.get('errors.title') }} </p>
@@ -23,10 +23,26 @@
 
         <div class="mb-3">
             <label for="content" class="form-label">Write article here</label>
-            <textarea placeholder="Article Content" class="form-control" name="content" id="content" rows="3"></textarea>
+            <textarea placeholder="Article Content" class="form-control" name="content" id="content" rows="3">{{flashMessages.get('content') || ''}}</textarea>
         </div>
         @if(flashMessages.has('errors.content'))
             <p class="alert alert-danger"> {{ flashMessages.get('errors.content') }} </p>
+        @end
+
+        <div class="mb-3">
+            <label for="content" class="form-label">Tags (Many)</label>
+            <select class="form-select" name="tags[]" multiple aria-label="Multiple select example">
+                @each((tag, index) in tags)
+                    @if(flashMessages.get('tags')?.includes(tag.id))
+                        <option value="{{tag.id}}" selected>{{tag.name}}</option>
+                    @else
+                        <option value="{{tag.id}}">{{tag.name}}</option>
+                    @endif
+                @end
+            </select>
+        </div>
+        @if(flashMessages.has('errors.tags'))
+            <p class="alert alert-danger"> {{ flashMessages.get('errors.tags') }} </p>
         @end
 
         <div class="d-grid gap-2">

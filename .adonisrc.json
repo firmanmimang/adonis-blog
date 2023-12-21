@@ -13,6 +13,9 @@
     "Database": "database",
     "Contracts": "contracts"
   },
+  "commandsAliases": {
+    "migrate": "migration:run"
+  },
   "preloads": [
     "./start/routes",
     "./start/kernel"
@@ -24,7 +27,8 @@
     "@adonisjs/view",
     "@adonisjs/shield",
     "@adonisjs/lucid",
-    "@adonisjs/auth"
+    "@adonisjs/auth",
+    "@adonisjs/lucid-slugify"
   ],
   "metaFiles": [
     {

@@ -35,6 +35,22 @@
             <p class="alert alert-danger"> {{ flashMessages.get('errors.content') }} </p>
         @end
 
+        <div class="mb-3">
+            <label for="content" class="form-label">Tags (Many)</label>
+            <select class="form-select" name="tags[]" multiple aria-label="Multiple select example">
+                @each((tag, index) in tags)
+                    @if(article.tags.map(obj => obj.id).includes(tag.id))
+                        <option value="{{tag.id}}" selected>{{tag.name}}</option>
+                    @else
+                        <option value="{{tag.id}}">{{tag.name}}</option>
+                    @endif
+                @end
+            </select>
+        </div>
+        @if(flashMessages.has('errors.tags'))
+            <p class="alert alert-danger"> {{ flashMessages.get('errors.tags') }} </p>
+        @end
+
         <div class="d-grid gap-2">
             <button type="submit" class="btn btn-primary mb-3 block flex">Update</button>
         </div>

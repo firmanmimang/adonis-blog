@@ -1,0 +1,33 @@
+@layout('layouts/app')
+
+@section('body')
+<div class="container my-5">
+  <a href="{{route('tag.create')}}" type="button" class="btn btn-outline-primary">Create Tag</a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Slug</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @each((tag, index) in tags)
+        <tr>
+          <th scope="row">{{tag.id}}</th>
+          <td>{{tag.name}}</td>
+          <td>{{tag.slug}}</td>
+          <td class="d-flex align-items-center" style="gap: 5px">
+            <a href="{{route('tag.edit', [tag.slug])}}" class="btn btn-secondary">Edit</a>
+            <form action="{{route('tag.destroy', [tag.slug])}}?_method=delete" method="POST">
+              {{ csrfField() }}
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+      @end
+    </tbody>
+  </table>
+</div>
+@end

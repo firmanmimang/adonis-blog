@@ -1,0 +1,22 @@
+@layout('layouts/app')
+
+@section('body')
+<div class="m-auto mt-5">
+    <form action="{{route('tag.update', [tag.slug])}}?_method=patch" method="POST" class="container col-lg-6">
+        <h1>Create Tag</h1>
+        {{ csrfField() }}
+        <div class="mb-3">
+            <label for="name" class="form-label">Tag Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Tag Name" value="{{tag.name}}">
+        </div>
+        @if(flashMessages.has('errors.name'))
+        <p class="alert alert-danger"> {{ flashMessages.get('errors.name') }} </p>
+        @end
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary mb-3 block flex">Create</button>
+        </div>
+    </form>
+</div>
+
+@end
